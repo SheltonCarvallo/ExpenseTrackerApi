@@ -4,6 +4,7 @@ using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    partial class ExpenseTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241103164905_Setting UpdateDate nullable")]
+    partial class SettingUpdateDatenullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,17 +39,17 @@ namespace DataLayer.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("BalanceCreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("BalanceUpdateDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("BankId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -60,38 +63,6 @@ namespace DataLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Balances");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("1cf56382-11a2-4e5d-a50e-a94988c8328a"),
-                            AccountNumber = "BcoBoSXCJ1",
-                            Amount = 3000m,
-                            BalanceCreatedDate = new DateTime(2024, 11, 3, 16, 33, 9, 517, DateTimeKind.Local).AddTicks(5737),
-                            BankId = 3,
-                            StatusId = 1,
-                            UserId = new Guid("e1a1e1c4-bf89-4b8f-b9e1-c4747dbd2a64")
-                        },
-                        new
-                        {
-                            Id = new Guid("eb38c548-1a2a-46b3-864b-461b3083b16b"),
-                            AccountNumber = "BcoPiIBRE1",
-                            Amount = 3000m,
-                            BalanceCreatedDate = new DateTime(2024, 11, 3, 16, 33, 9, 517, DateTimeKind.Local).AddTicks(5749),
-                            BankId = 2,
-                            StatusId = 1,
-                            UserId = new Guid("b0d1e1c4-df87-4f4a-a4e4-d4747dbc1b44")
-                        },
-                        new
-                        {
-                            Id = new Guid("f4bbe33c-ae5d-4132-b1dd-251be13f994e"),
-                            AccountNumber = "OwnSXCJ1",
-                            Amount = 700m,
-                            BalanceCreatedDate = new DateTime(2024, 11, 3, 16, 33, 9, 517, DateTimeKind.Local).AddTicks(5751),
-                            BankId = 4,
-                            StatusId = 1,
-                            UserId = new Guid("e1a1e1c4-bf89-4b8f-b9e1-c4747dbd2a64")
-                        });
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Bank", b =>
@@ -102,14 +73,14 @@ namespace DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("BankModifiedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("BankName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("BankRegisterDate")
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
@@ -130,15 +101,15 @@ namespace DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CategoryDateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("CategoryDateModified")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -165,17 +136,17 @@ namespace DataLayer.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpenseRegisterDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ExpenseUpdateDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("PaymentMethodId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -203,14 +174,14 @@ namespace DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("PaymentMethodModifiedDate")
+                    b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethodName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PaymentMethodRegisterDate")
+                    b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
@@ -256,13 +227,13 @@ namespace DataLayer.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UserRegisterDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UserUpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
@@ -273,28 +244,6 @@ namespace DataLayer.Migrations
                     b.HasIndex("StatusId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("e1a1e1c4-bf89-4b8f-b9e1-c4747dbd2a64"),
-                            Email = "",
-                            FirstName = "Shelton",
-                            LastName = "Carvallo",
-                            StatusId = 1,
-                            UserRegisterDate = new DateTime(2024, 11, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Username = ""
-                        },
-                        new
-                        {
-                            Id = new Guid("b0d1e1c4-df87-4f4a-a4e4-d4747dbc1b44"),
-                            Email = "",
-                            FirstName = "Ivonne",
-                            LastName = "Rubira",
-                            StatusId = 1,
-                            UserRegisterDate = new DateTime(2024, 11, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Username = ""
-                        });
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Balance", b =>
