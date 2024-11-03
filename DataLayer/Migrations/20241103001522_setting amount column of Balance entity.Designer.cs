@@ -4,6 +4,7 @@ using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    partial class ExpenseTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241103001522_setting amount column of Balance entity")]
+    partial class settingamountcolumnofBalanceentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,13 +51,6 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BankId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("Balances");
                 });
 
@@ -80,8 +76,6 @@ namespace DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("Banks");
                 });
@@ -109,8 +103,6 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Categories");
                 });
 
@@ -136,8 +128,6 @@ namespace DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("PaymentMethods");
                 });
@@ -192,103 +182,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Balance", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Bank", "Bank")
-                        .WithMany("Balances")
-                        .HasForeignKey("BankId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ModelLayer.Models.Status", "Status")
-                        .WithMany("Balances")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ModelLayer.Models.User", "User")
-                        .WithOne("Balance")
-                        .HasForeignKey("ModelLayer.Models.Balance", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Bank");
-
-                    b.Navigation("Status");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Bank", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Status", "Status")
-                        .WithMany("Banks")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Category", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Status", "Status")
-                        .WithMany("Categories")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.PaymentMethod", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Status", "Status")
-                        .WithMany("PaymentMethods")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.User", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Status", "Status")
-                        .WithMany("Users")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Bank", b =>
-                {
-                    b.Navigation("Balances");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Status", b =>
-                {
-                    b.Navigation("Balances");
-
-                    b.Navigation("Banks");
-
-                    b.Navigation("Categories");
-
-                    b.Navigation("PaymentMethods");
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.User", b =>
-                {
-                    b.Navigation("Balance");
                 });
 #pragma warning restore 612, 618
         }

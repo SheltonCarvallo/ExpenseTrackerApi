@@ -7,4 +7,6 @@ public class Bank
     public DateTime RegisterDate { get; set; }
     public DateTime ModifiedDate { get; set; }
     public int StatusId { get; set; }
+    public Status Status { get; set; } = null!;
+    public ICollection<Balance> Balances { get; set; } = null!;
 }

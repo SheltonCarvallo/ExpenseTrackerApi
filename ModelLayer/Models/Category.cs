@@ -7,4 +7,5 @@ public class Category
     public DateTime DateCreated { get; set; }
     public DateTime DateModified { get; set; }
     public int StatusId { get; set; }
+    public Status? Status { get; set; }
 }

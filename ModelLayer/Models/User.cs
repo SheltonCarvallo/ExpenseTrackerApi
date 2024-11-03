@@ -12,5 +12,6 @@ public class User
     public int StatusId { get; set; }
     //Navigation Properties are used to reference the related entity 
     //It can be defined on the principal or dependent entity
-   // public Status? Status { get; set; } // Reference navigation property
+    public Status? Status { get; set; } // Reference navigation property
+    public Balance? Balance { get; set; } //Reference navigation to dependent
 }

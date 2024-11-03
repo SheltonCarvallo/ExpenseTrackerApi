@@ -4,6 +4,7 @@ using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    partial class ExpenseTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241103021236_Balance - Bank relationship")]
+    partial class BalanceBankrelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,6 @@ namespace DataLayer.Migrations
                     b.HasIndex("BankId");
 
                     b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Balances");
                 });
@@ -211,17 +211,9 @@ namespace DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ModelLayer.Models.User", "User")
-                        .WithOne("Balance")
-                        .HasForeignKey("ModelLayer.Models.Balance", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Bank");
 
                     b.Navigation("Status");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Bank", b =>
@@ -284,11 +276,6 @@ namespace DataLayer.Migrations
                     b.Navigation("PaymentMethods");
 
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.User", b =>
-                {
-                    b.Navigation("Balance");
                 });
 #pragma warning restore 612, 618
         }

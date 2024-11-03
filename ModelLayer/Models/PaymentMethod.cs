@@ -7,4 +7,6 @@ public class PaymentMethod
     public DateTime RegisterDate { get; set; }
     public DateTime ModifiedDate { get; set; }
     public int StatusId { get; set; }
+    public Status Status { get; set; } = null!;
+
 }

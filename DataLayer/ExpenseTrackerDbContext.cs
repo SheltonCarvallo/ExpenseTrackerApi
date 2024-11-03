@@ -1,3 +1,4 @@
+using DataLayer.Configurations;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.Models;
 
@@ -24,4 +25,14 @@ public class ExpenseTrackerDbContext : DbContext
     public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
     public DbSet<Status> Statuses => Set<Status>();
     public DbSet<User> Users => Set<User>();
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        new BalanceConfiguration().Configure(modelBuilder.Entity<Balance>());
+        new StatusConfiguration().Configure(modelBuilder.Entity<Status>());
+        new BankConfiguration().Configure(modelBuilder.Entity<Bank>());
+       new UserConfiguration().Configure(modelBuilder.Entity<User>());
+    }
 }
+
