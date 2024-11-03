@@ -8,8 +8,8 @@ public class Balance
     public int BankId { get; set; }
     public int StatusId { get; set; }
     public decimal Amount { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public DateTime UpdateDate { get; set; }
+    public DateTime BalanceCreatedDate { get; set; }
+    public DateTime? BalanceUpdateDate { get; set; }
     
     //Status 
     public Status Status { get; set; } = null!;

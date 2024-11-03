@@ -8,8 +8,8 @@ public class Expense
     public int PaymentMethodId { get; set; }
     public int BankId { get; set; }
     public int CategoryId { get; set; }
-    public DateTime RegisterDate { get; set; }
-    public DateTime UpdateDate { get; set; }
+    public DateTime ExpenseRegisterDate { get; set; }
+    public DateTime? ExpenseUpdateDate { get; set; }
     public int StatusId { get; set; }
     //Relationships
 
