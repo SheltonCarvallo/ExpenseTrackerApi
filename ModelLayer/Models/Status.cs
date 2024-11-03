@@ -11,4 +11,5 @@ public class Status
    public ICollection<Category> Categories { get; } = new List<Category>();
    public ICollection<Bank> Banks { get; } = new List<Bank>();
    public ICollection<Balance> Balances { get; } = new List<Balance>();
+   public ICollection<Expense> Expenses { get; } = new List<Expense>();
 } 

@@ -4,6 +4,7 @@ using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    partial class ExpenseTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241103042530_Fixed relationship user - balance")]
+    partial class Fixedrelationshipuserbalance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,51 +121,6 @@ namespace DataLayer.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Expense", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<int>("BankId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentMethodId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RegisterDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Expenses");
-                });
-
             modelBuilder.Entity("ModelLayer.Models.PaymentMethod", b =>
                 {
                     b.Property<int>("Id")
@@ -261,7 +219,7 @@ namespace DataLayer.Migrations
                         .IsRequired();
 
                     b.HasOne("ModelLayer.Models.User", "User")
-                        .WithMany("Balances")
+                        .WithMany("Balance")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -295,49 +253,6 @@ namespace DataLayer.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("ModelLayer.Models.Expense", b =>
-                {
-                    b.HasOne("ModelLayer.Models.Bank", "Bank")
-                        .WithMany("Expenses")
-                        .HasForeignKey("BankId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ModelLayer.Models.Category", "Category")
-                        .WithMany("Expenses")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ModelLayer.Models.PaymentMethod", "PaymentMethod")
-                        .WithMany("Expenses")
-                        .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ModelLayer.Models.Status", "Status")
-                        .WithMany("Expenses")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ModelLayer.Models.User", "User")
-                        .WithMany("Expenses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Bank");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("PaymentMethod");
-
-                    b.Navigation("Status");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ModelLayer.Models.PaymentMethod", b =>
                 {
                     b.HasOne("ModelLayer.Models.Status", "Status")
@@ -363,18 +278,6 @@ namespace DataLayer.Migrations
             modelBuilder.Entity("ModelLayer.Models.Bank", b =>
                 {
                     b.Navigation("Balances");
-
-                    b.Navigation("Expenses");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.Category", b =>
-                {
-                    b.Navigation("Expenses");
-                });
-
-            modelBuilder.Entity("ModelLayer.Models.PaymentMethod", b =>
-                {
-                    b.Navigation("Expenses");
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Status", b =>
@@ -385,8 +288,6 @@ namespace DataLayer.Migrations
 
                     b.Navigation("Categories");
 
-                    b.Navigation("Expenses");
-
                     b.Navigation("PaymentMethods");
 
                     b.Navigation("Users");
@@ -394,9 +295,7 @@ namespace DataLayer.Migrations
 
             modelBuilder.Entity("ModelLayer.Models.User", b =>
                 {
-                    b.Navigation("Balances");
-
-                    b.Navigation("Expenses");
+                    b.Navigation("Balance");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,5 +8,6 @@ public class PaymentMethod
     public DateTime ModifiedDate { get; set; }
     public int StatusId { get; set; }
     public Status Status { get; set; } = null!;
+    public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
 }

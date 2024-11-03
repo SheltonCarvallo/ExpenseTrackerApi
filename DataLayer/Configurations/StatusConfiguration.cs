@@ -37,5 +37,11 @@ public class StatusConfiguration : IEntityTypeConfiguration<Status>
             .WithOne(e => e.Status)
             .HasForeignKey(e => e.StatusId)
             .IsRequired();
+        
+        builder
+            .HasMany(e => e.Expenses)
+            .WithOne(e => e.Status)
+            .HasForeignKey(e => e.StatusId)
+            .IsRequired();
     }
 }

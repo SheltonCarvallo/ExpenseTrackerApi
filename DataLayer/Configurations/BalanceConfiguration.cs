@@ -8,6 +8,7 @@ public class BalanceConfiguration : IEntityTypeConfiguration<Balance>
 {
     public void Configure(EntityTypeBuilder<Balance> builder)
     {
+        builder.Property(b => b.Amount).HasMaxLength(10).IsRequired();
         builder.Property(b => b.Amount).HasColumnType("decimal(18,2)");
     }
 }

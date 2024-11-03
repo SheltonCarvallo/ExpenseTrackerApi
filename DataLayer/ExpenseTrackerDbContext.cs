@@ -25,6 +25,7 @@ public class ExpenseTrackerDbContext : DbContext
     public DbSet<PaymentMethod> PaymentMethods => Set<PaymentMethod>();
     public DbSet<Status> Statuses => Set<Status>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<Expense> Expenses => Set<Expense>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +33,9 @@ public class ExpenseTrackerDbContext : DbContext
         new BalanceConfiguration().Configure(modelBuilder.Entity<Balance>());
         new StatusConfiguration().Configure(modelBuilder.Entity<Status>());
         new BankConfiguration().Configure(modelBuilder.Entity<Bank>());
-       new UserConfiguration().Configure(modelBuilder.Entity<User>());
+        new UserConfiguration().Configure(modelBuilder.Entity<User>());
+        new PaymentMethodConfiguration().Configure(modelBuilder.Entity<PaymentMethod>());
+        new CategoryConfiguration().Configure(modelBuilder.Entity<Category>());
+        new ExpenseConfiguration().Configure(modelBuilder.Entity<Expense>());
     }
 }
-

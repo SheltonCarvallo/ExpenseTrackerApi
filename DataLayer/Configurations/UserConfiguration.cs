@@ -9,10 +9,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder
-            .HasOne(e => e.Balance)
+            .HasMany(e => e.Balances)
             .WithOne(e => e.User)
-            .HasForeignKey<Balance>(e => e.UserId)
+            .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
+        builder
+            .HasMany(e => e.Expenses)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+            
     }
 }

@@ -8,4 +8,5 @@ public class Category
     public DateTime DateModified { get; set; }
     public int StatusId { get; set; }
     public Status? Status { get; set; }
+    public List<Expense>? Expenses { get; set; } = new List<Expense>();
 }

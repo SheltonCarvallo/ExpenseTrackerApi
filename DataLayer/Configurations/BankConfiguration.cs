@@ -14,5 +14,12 @@ public class BankConfiguration : IEntityTypeConfiguration<Bank>
             .HasForeignKey(e => e.BankId)
             .OnDelete(DeleteBehavior.Restrict) // TODO learn more about this kind of configuration
             .IsRequired();
+        
+        builder
+            .HasMany(e => e.Expenses)
+            .WithOne(e => e.Bank)
+            .HasForeignKey(e => e.BankId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
     }
 }

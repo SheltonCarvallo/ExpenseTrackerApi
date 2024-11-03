@@ -3,6 +3,7 @@ namespace ModelLayer.Models;
 public class Balance
 {
     public Guid Id { get; set; }
+    public string AccountNumber { get; set; } = string.Empty;
     public Guid UserId { get; set; }
     public int BankId { get; set; }
     public int StatusId { get; set; }
