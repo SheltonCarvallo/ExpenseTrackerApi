@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ModelLayer.Models;
 
 public class Balance
@@ -12,11 +14,13 @@ public class Balance
     public DateTime? BalanceUpdateDate { get; set; }
     
     //Status 
-    public Status Status { get; set; } = null!;
+    [JsonIgnore]
+    public Status? Status { get; set; }
     
     //Bank
-    public Bank Bank { get; set; } = null!;
-    
+    [JsonIgnore]
+    public Bank? Bank { get; set; }
     //User
-    public User User { get; set; } = null!; //Required reference navigation to principal
+    [JsonIgnore]
+    public User? User { get; set; } //Required reference navigation to principal
 }

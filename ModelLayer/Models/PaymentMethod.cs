@@ -7,7 +7,7 @@ public class PaymentMethod
     public DateTime PaymentMethodRegisterDate { get; set; }
     public DateTime? PaymentMethodModifiedDate { get; set; }
     public int StatusId { get; set; }
-    public Status Status { get; set; } = null!;
+    public Status? Status { get; set; }
     public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
 }

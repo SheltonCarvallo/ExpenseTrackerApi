@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ModelLayer.Models;
 
 public class User
@@ -12,6 +14,7 @@ public class User
     public int StatusId { get; set; }
     //Navigation Properties are used to reference the related entity 
     //It can be defined on the principal or dependent entity
+    [JsonIgnore]
     public Status? Status { get; set; } // Reference navigation property
 
     public ICollection<Balance>? Balances { get; set; } = new List<Balance>();

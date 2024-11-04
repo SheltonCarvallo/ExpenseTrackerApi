@@ -1,11 +1,21 @@
+using System.Text.Json.Serialization;
 using DataLayer;
+using ExpenseTrackerApi.Interfaces;
+using ExpenseTrackerApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+
+
+builder.Services.AddScoped<IUser, UserService>();
 
 builder.Services.AddDbContext<ExpenseTrackerDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
