@@ -8,6 +8,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        builder.Property(m => m.IdentificationID).IsRequired();
         builder
             .HasMany(e => e.Balances)
             .WithOne(e => e.User)

@@ -13,10 +13,27 @@ public class UserService : IUser
     {
         _context = context;
     }
-    public async Task<IEnumerable<User>> GetUsers()
+
+    public async Task<IEnumerable<User>> GetUsers(int page = 1, int pageSize = 5)
     {
-        IEnumerable<User> users = await _context.Users.ToListAsync();
-        return users;
+        try
+        {
+            IQueryable<User> query = _context.Users
+                .Include(user => user.Balances)
+                .Where(user => user.StatusId == 1)
+                .OrderByDescending(user => user.UserRegisterDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .AsSplitQuery();
+            return await query.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Sorry there have been an error{ex.Message}"); //TODO tha try-catch has to be corrected
+            
+        }
+
+        return new List<User>();
     }
 
     public async Task<User> GetUser(Guid userID)
@@ -25,15 +42,25 @@ public class UserService : IUser
         return user ?? new User() { };
     }
 
-    public async Task PostUser(User user)
+    public async Task<SavedAuthorization> PostUser(User user)
     {
-        bool existUser = await _context.Users.AnyAsync(u => u.Id == user.Id);
-        if (existUser)
+    
+            bool existUser = await _context.Users.AnyAsync(u => u.IdentificationID == user.IdentificationID);
+            if (existUser)
+            {
+                return (new SavedAuthorization { CouldBeSaved = false});
+            }
+            user.UserRegisterDate = DateTime.Now;
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return new SavedAuthorization{CouldBeSaved = true};
+        /*catch(DbUpdateException)
         {
-            return;
+            Console.WriteLine("You are entering a ID status which not exists in the database");
         }
-        user.UserRegisterDate = DateTime.Now;
-        await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"{ex.GetType()} says There have been an erro: {ex.Message}");
+        }*/
     }
 }

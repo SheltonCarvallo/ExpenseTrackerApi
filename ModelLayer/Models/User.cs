@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ModelLayer.Models;
@@ -5,8 +6,17 @@ namespace ModelLayer.Models;
 public class User
 {
     public Guid Id { get; set; }
+
+    [Required (ErrorMessage = "Identification ID is required")]
+    [StringLength(maximumLength:10, MinimumLength=10, ErrorMessage = "Identificatio number must be 10 digits")]
+    public string IdentificationID { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "First name is required")]
     public string FirstName { get; set; } = string.Empty;
+    
+    [Required(ErrorMessage = "Last name is required")]
     public string? LastName { get; set; } = string.Empty;
+    
     public string? Username { get; set; } = string.Empty;
     public string? Email { get; set; } = string.Empty;
     public DateTime UserRegisterDate { get; set; }
