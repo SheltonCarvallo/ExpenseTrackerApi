@@ -15,10 +15,10 @@ public class User
     public string FirstName { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Last name is required")]
-    public string? LastName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
     
-    public string? Username { get; set; } = string.Empty;
-    public string? Email { get; set; } = string.Empty;
+    public string? Username { get; set; }
+    public string? Email { get; set; }
     public DateTime UserRegisterDate { get; set; }
     public DateTime? UserUpdateDate { get; set; }
     public int StatusId { get; set; }

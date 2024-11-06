@@ -1,6 +1,7 @@
 using ExpenseTrackerApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ModelLayer.DTOs;
 using ModelLayer.Models;
 
 namespace ExpenseTrackerApi.Controllers;
@@ -18,15 +19,22 @@ public class UserController : ControllerBase
 
     [HttpGet("{id:guid}")] //Adding constraint
     public async Task<ActionResult<User>> GetUser(Guid id)
-    //public async Task<IActionResult> GetUser(Guid id)
     {
-        User user = await _user.GetUser(id);
-        if (user.Id == Guid.Empty)
+        try
         {
-            return NotFound();
-        }
+            User user = await _user.GetUser(id);
+            if (user.Id == Guid.Empty)
+            {
+                return NotFound();
+            }
 
-        return Ok(user);
+            return Ok(user);
+        }
+        catch (Exception ex) 
+        {
+            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error"); throw;
+        }
+       
     }
 
     [HttpGet]
@@ -41,21 +49,31 @@ public class UserController : ControllerBase
     {
         try
         {
-            /*if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }*/
             SavedAuthorization wasSaved = await _user.PostUser(user);
-            return wasSaved.CouldBeSaved ? CreatedAtAction(nameof(GetUser), new { id = user.Id }, user) : BadRequest(new { error = "Identification number already register" });
+            return wasSaved.CouldBeSaved ?
+                CreatedAtAction(nameof(GetUser), new { id = user.Id }, user) : 
+                BadRequest(new { error = "Identification number already register" });
             //If I am not mistaken the first parameter in CreatedAtAction returns the url with the action method to get the resource recently created
         }
         catch (DbUpdateException ex)
         {
-         
             return ValidationProblem($"{ex.GetType()}",ex.Message, 400, "Invalid ID");
-            //return BadRequest(new {error = $"{e.Message}", type = "" });
         }
         catch(Exception ex)
+        {
+            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+        }
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> PutUser([FromBody] PutUserDTO user)
+    {
+        try
+        {
+            SavedAuthorization wasUpdated = await _user.PutUser(user);
+            return wasUpdated.CouldBeSaved ? NoContent() : BadRequest(new { error = "The ID user doesn't exist, please check if you are sendind the correct ID" });
+        }
+        catch (Exception ex)
         {
             return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
         }
