@@ -32,7 +32,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex) 
         {
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error"); throw;
+            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
         }
        
     }
@@ -53,11 +53,11 @@ public class UserController : ControllerBase
             return wasSaved.CouldBeSaved ?
                 CreatedAtAction(nameof(GetUser), new { id = user.Id }, user) : 
                 BadRequest(new { error = "Identification number already register" });
-            //If I am not mistaken the first parameter in CreatedAtAction returns the url with the action method to get the resource recently created
+                //If I am not mistaken the first parameter in CreatedAtAction returns the url with the action method to get the resource recently created
         }
         catch (DbUpdateException ex)
         {
-            return ValidationProblem($"{ex.GetType()}",ex.Message, 400, "Invalid ID");
+            return ValidationProblem($"{ex.GetType()}",ex.Message, 400, "There is an invalid ID");
         }
         catch(Exception ex)
         {

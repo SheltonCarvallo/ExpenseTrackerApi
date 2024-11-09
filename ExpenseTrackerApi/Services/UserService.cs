@@ -31,7 +31,7 @@ public class UserService : IUser
 
     public async Task<User> GetUser(Guid userID)
     {
-        User? user = await _context.Users.FindAsync(userID);
+        User? user = await _context.Users.Include(x => x.Balances).SingleOrDefaultAsync(u => u.Id == userID);
         return user ?? new User() { };
     }
 

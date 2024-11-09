@@ -59,7 +59,7 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Balances");
+                    b.ToTable("Balances", (string)null);
 
                     b.HasData(
                         new
@@ -119,7 +119,7 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Banks");
+                    b.ToTable("Banks", (string)null);
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Category", b =>
@@ -147,7 +147,7 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Expense", b =>
@@ -192,7 +192,7 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("ModelLayer.Models.PaymentMethod", b =>
@@ -220,7 +220,7 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("PaymentMethods");
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("ModelLayer.Models.Status", b =>
@@ -237,7 +237,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
                 });
 
             modelBuilder.Entity("ModelLayer.Models.User", b =>
@@ -278,7 +278,7 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new

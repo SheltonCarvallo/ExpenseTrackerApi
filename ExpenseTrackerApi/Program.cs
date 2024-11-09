@@ -16,6 +16,7 @@ builder.Services.AddControllers()
 
 
 builder.Services.AddScoped<IUser, UserService>();
+builder.Services.AddScoped<IExpense, ExpenseService>();
 
 builder.Services.AddDbContext<ExpenseTrackerDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -31,7 +32,7 @@ WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
+{ 
     app.UseSwagger();
     app.UseSwaggerUI();
 }
