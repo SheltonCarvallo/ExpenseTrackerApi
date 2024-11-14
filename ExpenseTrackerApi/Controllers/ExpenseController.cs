@@ -2,6 +2,7 @@
 using ExpenseTrackerApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ModelLayer.DTOs;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -25,26 +26,46 @@ public class ExpenseController : ControllerBase
             Expense expense = await _expense.GetExpense(expenseId);
             return expense.Id != Guid.Empty ? Ok(expense) : NotFound();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
 
-            throw;
+            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
         }
     }
 
-   /* [HttpGet("user/{UserId:guid}")] //Adding constraint
-    public async Task<ActionResult<ICollection<Expense>>> GetExpensesUser(Guid userId)
+   [HttpGet("user/{UserId:guid}")] //Adding constraint
+    public async Task<ActionResult<IEnumerable<Expense>>> GetExpensesUser(Guid userId)
     {
         try
         {
+            IEnumerable<Expense> expensesUser = await _expense.GetExpensesUser(userId);
 
+
+            return expensesUser.Any() ? Ok(expensesUser) :NoContent();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
 
-            throw;
+            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
         }
-    }*/
+    }
+
+    [HttpGet]
+    [Route("user/GetExpensesByDate")]
+    public async Task<ActionResult<IEnumerable<ExpenseDTO>>> GetExpensesFromSpecificDateToNow(Guid userId, DateTime date)
+    {
+        try
+        {
+            IEnumerable<ExpenseDTO> expensesByDate = await _expense.GetExpensesFromSpecificDateToNow(userId, date);
+
+            return expensesByDate.Any() ? Ok(expensesByDate) : NoContent();
+        }
+        catch (Exception ex)
+        {
+
+            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+        }
+    }
 
     [HttpPost]
     public async Task<IActionResult> PostExpense([FromBody] Expense expense)

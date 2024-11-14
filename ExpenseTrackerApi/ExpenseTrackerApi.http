@@ -4,3 +4,11 @@ GET {{ExpenseTrackerApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{ExpenseTrackerApi_HostAddress}}/api/[Controller]/user/GetExpensesByDate?date=2024-11-14T20%3A35%3A57.7782238%2B00%3A00
+
+###
+
+GET {{ExpenseTrackerApi_HostAddress}}/api/[Controller]/user/GetExpensesByDate?date=2024-11-14T20%3A46%3A33.6283468%2B00%3A00
+
+###
