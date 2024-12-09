@@ -1,11 +1,12 @@
 using ExpenseTrackerApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.DTOs;
 using ModelLayer.Models;
 
 namespace ExpenseTrackerApi.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/[Controller]")]
 public class UserController : ControllerBase
@@ -30,13 +31,13 @@ public class UserController : ControllerBase
 
             return Ok(user);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+            return ValidationProblem("Unexpected error occurred, contact IT department", ex.Message, 500,
+                "Unexpected error");
         }
-       
     }
-
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers(int page = 1, int pageSize = 5)
     {
@@ -49,19 +50,20 @@ public class UserController : ControllerBase
     {
         try
         {
-            SavedAuthorization wasSaved = await _user.PostUser(user);
-            return wasSaved.CouldBeSaved ?
-                CreatedAtAction(nameof(GetUser), new { id = user.Id }, user) : 
-                BadRequest(new { error = "Identification number already register" });
-                //If I am not mistaken the first parameter in CreatedAtAction returns the url with the action method to get the resource recently created
+            SavedAuthorization savedAuthorization = await _user.PostUser(user);
+            return savedAuthorization.CouldBeSaved
+                ? CreatedAtAction(nameof(GetUser), new { id = user.Id }, user)
+                : BadRequest(new { error = "Identification number already register" });
+            //If I am not mistaken the first parameter in CreatedAtAction returns the url with the action method to get the resource recently created
         }
         catch (DbUpdateException ex)
         {
-            return ValidationProblem($"{ex.GetType()}",ex.Message, 400, "There is an invalid ID");
+            return ValidationProblem($"{ex.GetType()}", ex.Message, 400, "There is an invalid ID");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+            return ValidationProblem("Unexpected error occurred, contact IT department", ex.Message, 500,
+                "Unexpected error");
         }
     }
 
@@ -70,12 +72,16 @@ public class UserController : ControllerBase
     {
         try
         {
-            SavedAuthorization wasUpdated = await _user.PutUser(user);
-            return wasUpdated.CouldBeSaved ? NoContent() : BadRequest(new { error = "The ID user doesn't exist, please check if you are sendind the correct ID" });
+            SavedAuthorization savedAuthorization = await _user.PutUser(user);
+            return savedAuthorization.CouldBeSaved
+                ? NoContent()
+                : BadRequest(
+                    new { error = "The ID user doesn't exist, please check if you are sending the correct ID" });
         }
         catch (Exception ex)
         {
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+            return ValidationProblem("Unexpected error occurred, contact IT department", ex.Message, 500,
+                "Unexpected error");
         }
     }
 }

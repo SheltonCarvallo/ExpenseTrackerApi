@@ -1,4 +1,5 @@
 ﻿using ModelLayer.Models;
+using ModelLayer.Models.FakeModels;
 using ExpenseTrackerApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,7 @@ public class ExpenseController : ControllerBase
     }
 
     [HttpGet]
-    [Route("user/GetExpensesByDate")]
+    [Route("user/GetExpensesFromADateUpToNow")]
     public async Task<ActionResult<IEnumerable<ExpenseDTO>>> GetExpensesFromSpecificDateToNow(Guid userId, DateTime date)
     {
         try
@@ -62,6 +63,24 @@ public class ExpenseController : ControllerBase
         }
         catch (Exception ex)
         {
+
+            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+        }
+    }
+
+    [HttpGet]
+    [Route("user/GetExpensesBetweenDates")]
+    public async Task<ActionResult<IEnumerable<ExpenseBetweenDatesSP>>> GetExpenseBetweenDates(Guid userId, DateTime startDate, DateTime endDate)
+    {
+        try
+        {
+            IEnumerable<ExpenseBetweenDatesSP> expenses = await _expense.GetExpenseBetweenDates(userId, startDate, endDate);
+            return expenses.Any() ? Ok(expenses) : NoContent(); 
+
+        }
+        catch (Exception ex)
+        {
+
 
             return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
         }

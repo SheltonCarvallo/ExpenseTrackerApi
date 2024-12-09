@@ -1,5 +1,6 @@
 ﻿using ModelLayer.DTOs;
 using ModelLayer.Models;
+using ModelLayer.Models.FakeModels;
 
 namespace ExpenseTrackerApi.Interfaces
 
@@ -9,6 +10,7 @@ namespace ExpenseTrackerApi.Interfaces
         public Task<IEnumerable<Expense>> GetExpensesUser(Guid userId);
         public Task<Expense> GetExpense(Guid expenseId);
         public Task<IEnumerable<ExpenseDTO>> GetExpensesFromSpecificDateToNow (Guid userId, DateTime date);
+        public Task <IEnumerable<ExpenseBetweenDatesSP>> GetExpenseBetweenDates(Guid userId,DateTime startDate, DateTime endDate);
         public Task<ExpenseAuthorization> PostExpense(Expense expense);
 
 

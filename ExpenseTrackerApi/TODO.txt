@@ -1,0 +1,2 @@
+TODO: 
+    -the identification id shouldn't be mandatory in the user entity in the db expense 

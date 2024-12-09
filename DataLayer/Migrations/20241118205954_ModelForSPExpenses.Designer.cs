@@ -4,6 +4,7 @@ using DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    partial class ExpenseTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241118205954_ModelForSPExpenses")]
+    partial class ModelForSPExpenses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,7 +70,7 @@ namespace DataLayer.Migrations
                             Id = new Guid("1cf56382-11a2-4e5d-a50e-a94988c8328a"),
                             AccountNumber = "BcoBoSXCJ1",
                             Amount = 3000m,
-                            BalanceCreatedDate = new DateTime(2024, 11, 18, 16, 18, 39, 919, DateTimeKind.Local).AddTicks(282),
+                            BalanceCreatedDate = new DateTime(2024, 11, 18, 15, 59, 54, 409, DateTimeKind.Local).AddTicks(6950),
                             BankId = 3,
                             StatusId = 1,
                             UserId = new Guid("e1a1e1c4-bf89-4b8f-b9e1-c4747dbd2a64")
@@ -77,7 +80,7 @@ namespace DataLayer.Migrations
                             Id = new Guid("eb38c548-1a2a-46b3-864b-461b3083b16b"),
                             AccountNumber = "BcoPiIBRE1",
                             Amount = 3000m,
-                            BalanceCreatedDate = new DateTime(2024, 11, 18, 16, 18, 39, 919, DateTimeKind.Local).AddTicks(299),
+                            BalanceCreatedDate = new DateTime(2024, 11, 18, 15, 59, 54, 409, DateTimeKind.Local).AddTicks(6977),
                             BankId = 2,
                             StatusId = 1,
                             UserId = new Guid("b0d1e1c4-df87-4f4a-a4e4-d4747dbc1b44")
@@ -87,7 +90,7 @@ namespace DataLayer.Migrations
                             Id = new Guid("f4bbe33c-ae5d-4132-b1dd-251be13f994e"),
                             AccountNumber = "OwnSXCJ1",
                             Amount = 700m,
-                            BalanceCreatedDate = new DateTime(2024, 11, 18, 16, 18, 39, 919, DateTimeKind.Local).AddTicks(301),
+                            BalanceCreatedDate = new DateTime(2024, 11, 18, 15, 59, 54, 409, DateTimeKind.Local).AddTicks(6979),
                             BankId = 4,
                             StatusId = 1,
                             UserId = new Guid("e1a1e1c4-bf89-4b8f-b9e1-c4747dbd2a64")
@@ -197,7 +200,7 @@ namespace DataLayer.Migrations
 
             modelBuilder.Entity("ModelLayer.Models.FakeModels.ExpenseBetweenDatesSP", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("ExpenseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -208,21 +211,21 @@ namespace DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CategoryName")
+                    b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpenseRegisterDate")
+                    b.Property<DateTime>("ExpenseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentMethodName")
+                    b.Property<string>("PaymentMethod")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ExpenseId");
 
                     b.ToTable("ExpenseBetweenDatesSPs");
                 });

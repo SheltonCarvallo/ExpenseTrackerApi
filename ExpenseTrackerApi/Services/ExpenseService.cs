@@ -1,8 +1,10 @@
 ﻿using DataLayer;
 using ExpenseTrackerApi.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using ModelLayer.DTOs;
 using ModelLayer.Models;
+using ModelLayer.Models.FakeModels;
 
 namespace ExpenseTrackerApi.Services;
 
@@ -28,7 +30,7 @@ public class ExpenseService : IExpense
         return await query.ToListAsync();
     }
 
-    public async Task<IEnumerable<ExpenseDTO>> GetExpensesFromSpecificDateToNow(Guid userId, DateTime date) //I want to show the expense of a specific user and a range of dates
+    public async Task<IEnumerable<ExpenseDTO>> GetExpensesFromSpecificDateToNow(Guid userId, DateTime date) //I want to show the expense of a specific user from a specific date up to the current date of today
     {
         DateTime currentDate = DateTime.Now;
 
@@ -52,6 +54,17 @@ public class ExpenseService : IExpense
         return await query.ToListAsync();
 
     }
+
+    public async Task<IEnumerable<ExpenseBetweenDatesSP>> GetExpenseBetweenDates(Guid userId, DateTime startDate, DateTime endDate)
+    {
+
+
+        IEnumerable<ExpenseBetweenDatesSP> expenses = await _context.ExpenseBetweenDatesSPs
+                                                            .FromSql($"EXEC GetExpensesBetweenDates {userId}, {startDate}, {endDate}").ToListAsync();
+
+         return expenses.Any() ? expenses : [];
+    }
+
 
     public async Task<ExpenseAuthorization> PostExpense(Expense expense)
     {

@@ -1,6 +1,7 @@
 using DataLayer.Configurations;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.Models;
+using ModelLayer.Models.FakeModels;
 
 namespace DataLayer;
 
@@ -27,6 +28,7 @@ public class ExpenseTrackerDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Expense> Expenses => Set<Expense>();
 
+    public DbSet<ExpenseBetweenDatesSP> ExpenseBetweenDatesSPs => Set<ExpenseBetweenDatesSP>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +39,7 @@ public class ExpenseTrackerDbContext : DbContext
         new PaymentMethodConfiguration().Configure(modelBuilder.Entity<PaymentMethod>());
         new CategoryConfiguration().Configure(modelBuilder.Entity<Category>());
         new ExpenseConfiguration().Configure(modelBuilder.Entity<Expense>());
+       // new ExpenseBetweenDatesConfiguration().Configure(modelBuilder.Entity<ExpenseBetweenDatesSP>());
 
         modelBuilder.Entity<User>().HasData(
             new User

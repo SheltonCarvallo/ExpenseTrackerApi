@@ -52,7 +52,6 @@ public class UserService : IUser
     public async Task<SavedAuthorization> PutUser(PutUserDTO user)
     {
         User? userToUpdate = await _context.Users.FirstOrDefaultAsync(u => u.IdentificationID.Equals(user.IdentificationID));
-        //bool existUser = await _context.Users.AnyAsync(u => u.Id == user.Id);
         if (userToUpdate is null)
         {
             return new SavedAuthorization { CouldBeSaved = false };
