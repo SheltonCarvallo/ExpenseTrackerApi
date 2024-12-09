@@ -1,2 +1,3 @@
 TODO: 
     -the identification id shouldn't be mandatory in the user entity in the db expense 
+    -Delete the identification property, (See how it affects the DB Schema and how to use EF to this)    

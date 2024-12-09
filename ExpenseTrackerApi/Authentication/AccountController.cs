@@ -46,7 +46,7 @@ namespace ExpenseTrackerApi.Authentication
             {
                 string? token = GenerateToken(model.Username);
                 //Here I came up with to call the service which store the user in the business database
-                User? userDbBusiness = new User
+                User userDbExpenseTracker = new User
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
@@ -55,7 +55,7 @@ namespace ExpenseTrackerApi.Authentication
                     Email = model.Email,
                     StatusId = 1
                 };
-                SavedAuthorization savedAuthorization = await userService.PostUser(userDbBusiness);
+                SavedAuthorization savedAuthorization = await userService.PostUser(userDbExpenseTracker);
                 return Ok(new { token, savedAuthorization });
             }
 
