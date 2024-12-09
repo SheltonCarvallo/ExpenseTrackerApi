@@ -68,7 +68,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> PutUser([FromBody] PutUserDTO user)
+    public async Task<IActionResult> PutUser([FromBody] PutUserDto user)
     {
         try
         {
@@ -76,7 +76,7 @@ public class UserController : ControllerBase
             return savedAuthorization.CouldBeSaved
                 ? NoContent()
                 : BadRequest(
-                    new { error = "The ID user doesn't exist, please check if you are sending the correct ID" });
+                    new { error = "The username isn't registered, please check if you are sending the correct username" });
         }
         catch (Exception ex)
         {

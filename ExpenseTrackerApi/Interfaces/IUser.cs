@@ -9,5 +9,5 @@ public interface IUser
     public Task<User> GetUser(Guid userID);
     public Task<SavedAuthorization> PostUser(User user);
 
-    public Task<SavedAuthorization> PutUser(PutUserDTO user);
+    public Task<SavedAuthorization> PutUser(PutUserDto user);
 }

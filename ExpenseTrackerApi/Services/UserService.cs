@@ -17,7 +17,6 @@ public class UserService : IUser
 
     public async Task<IEnumerable<User>> GetUsers(int page = 1, int pageSize = 5)
     {
-
         IQueryable<User> query = _context.Users
             .Include(user => user.Balances)
             .Where(user => user.StatusId == 1)
@@ -26,7 +25,6 @@ public class UserService : IUser
             .Take(pageSize)
             .AsSplitQuery();
         return await query.ToListAsync();
-
     }
 
     public async Task<User> GetUser(Guid userID)
@@ -37,21 +35,16 @@ public class UserService : IUser
 
     public async Task<SavedAuthorization> PostUser(User user)
     {
-
-        bool existUser = await _context.Users.AnyAsync(u => u.IdentificationID == user.IdentificationID);
-        if (existUser)
-        {
-            return (new SavedAuthorization { CouldBeSaved = false });
-        }
         user.UserRegisterDate = DateTime.Now;
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
         return new SavedAuthorization { CouldBeSaved = true };
     }
 
-    public async Task<SavedAuthorization> PutUser(PutUserDTO user)
+    public async Task<SavedAuthorization> PutUser(PutUserDto user)
     {
-        User? userToUpdate = await _context.Users.FirstOrDefaultAsync(u => u.IdentificationID.Equals(user.IdentificationID));
+        User? userToUpdate =
+            await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower().Equals(user.Username.ToLower()));
         if (userToUpdate is null)
         {
             return new SavedAuthorization { CouldBeSaved = false };
@@ -61,13 +54,13 @@ public class UserService : IUser
             /*userToUpdate.IdentificationID = user.IdentificationID;
             userToUpdate.FirstName = user.FirstName;
             userToUpdate.LastName = user.LastName;
-            userToUpdate.Username = user.Username; 
+            userToUpdate.Username = user.Username;
             userToUpdate.Email = user.Email;
             userToUpdate.UserUpdateDate = DateTime.Now;*/
             //_context.Entry(user).State = EntityState.Modified;
             _context.Entry(userToUpdate).CurrentValues.SetValues(user);
             await _context.SaveChangesAsync();
             return new SavedAuthorization { CouldBeSaved = true };
-        }   
+        }
     }
 }

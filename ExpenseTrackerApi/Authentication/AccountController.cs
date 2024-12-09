@@ -51,7 +51,6 @@ namespace ExpenseTrackerApi.Authentication
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Username = model.Username,
-                    IdentificationID = "1512121212",
                     Email = model.Email,
                     StatusId = 1
                 };
