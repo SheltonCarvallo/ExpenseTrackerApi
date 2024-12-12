@@ -5,6 +5,7 @@ using ExpenseTrackerApi.Authentication.Models;
 using ExpenseTrackerApi.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using ModelLayer.Models;
 
@@ -13,6 +14,7 @@ namespace ExpenseTrackerApi.Authentication
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController(UserManager<AppUserModel> userManager, IConfiguration configuration, IUser userService) : ControllerBase
+    //IConfiguration interface to get the configuration values from the appsettings.json file.
     {
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterOrUpdateUserModel model)
@@ -36,7 +38,7 @@ namespace ExpenseTrackerApi.Authentication
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
             };
-
+            
             //try to save the user
             IdentityResult result = await userManager.CreateAsync(newUser, model.Password);
 
@@ -45,7 +47,7 @@ namespace ExpenseTrackerApi.Authentication
             if (result.Succeeded)
             {
                 string? token = GenerateToken(model.Username);
-                //Here I came up with to call the service which store the user in the business database
+                //Here I came up with to call the service which store the user in the business database (Me)
                 User userDbExpenseTracker = new User
                 {
                     FirstName = model.FirstName,
@@ -68,6 +70,29 @@ namespace ExpenseTrackerApi.Authentication
             // If we got this far, something failed, redisplay form
             return BadRequest(ModelState);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            //Get the secret in the configuration
+            //Check if the model is valid
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            AppUserModel? userModel =  await userManager.FindByNameAsync(model.Username);
+            if (userModel is not null)
+            {
+                if (await userManager.CheckPasswordAsync(userModel, model.Password))
+                {
+                        
+                    string? token = GenerateToken(userModel.UserName!);
+                    return Ok(new { token, userModel });
+
+                }
+            }
+            //If the user is not found display an error message
+            ModelState.AddModelError("Problem", "Invalid username or password" );
+            return BadRequest(ModelState);
+        }
+        
 
         private string? GenerateToken(string username)
         {
