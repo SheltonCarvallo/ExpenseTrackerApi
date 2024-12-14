@@ -1,5 +1,5 @@
 # Expense Tracker API
-> _[!NOTE]_
+> [!NOTE]
 > This project is still under development. Features and functionality may change, and new features will be added in future updates.
 
 This personal project is a backend API for tracking personal expenses. It's built using **.NET 8** and follows the principles of **Clean Architecture**. The API utilizes **Entity Framework (EF) Core** as the ORM, with **SQL Server** as the database provider.
