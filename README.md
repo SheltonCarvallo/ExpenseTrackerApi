@@ -6,7 +6,7 @@ This personal project is a backend API for tracking personal expenses. It's buil
 
 ## Project URL
 
-You can access the project here: [project URL](https://github.com/SheltonCarvallo/ExpenseTrackerApi.git)
+You can access the project here: [Expense Tracker API](https://github.com/SheltonCarvallo/ExpenseTrackerApi.git)
 
 ## Features
 
@@ -49,4 +49,7 @@ To run this project locally:
    ```bash
    git clone https://github.com/SheltonCarvallo/ExpenseTrackerApi.git
    cd ExpenseTrackerApi
+
+## Project Source
+   - This project was completed as part of the project ideas listed on roadmap.sh. https://roadmap.sh/projects/expense-tracker-api
 
