@@ -4,6 +4,10 @@
 
 This personal project is a backend API for tracking personal expenses. It's built using **.NET 8** and follows the principles of **Clean Architecture**. The API utilizes **Entity Framework (EF) Core** as the ORM, with **SQL Server** as the database provider.
 
+## Project URL
+
+You can access the project here: [Expense Tracker API](https://github.com/SheltonCarvallo/ExpenseTrackerApi.git)
+
 ## Features
 
 - **User Authentication**: Secure login and registration (planned to use JWT authentication).
