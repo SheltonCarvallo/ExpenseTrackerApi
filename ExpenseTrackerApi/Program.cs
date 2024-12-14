@@ -26,6 +26,7 @@ builder.Services.AddDbContext<ExpenseTrackerDbContext>(options =>
 builder.Services.AddDbContext<AuthDbContext>();
 
 builder.Services.AddIdentityCore<AppUserModel>() //Service Collection
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 
@@ -77,6 +78,33 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+//Check if the roles exist, if not, create them 
+using (IServiceScope serviceScope = app.Services.CreateScope())
+{
+    IServiceProvider services = serviceScope.ServiceProvider;
+    
+    //ensure the database is created
+    DbContext dbContext = services.GetRequiredService<AuthDbContext>();
+    //dbContext.Database.EnsureDeleted()
+    dbContext.Database.EnsureCreated();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    if(!await roleManager.RoleExistsAsync(AppRoles.Admin))
+    {
+        await roleManager.CreateAsync(new IdentityRole(AppRoles.Admin));
+    }
+
+    if (!await roleManager.RoleExistsAsync(AppRoles.VipUser))
+    {
+        await roleManager.CreateAsync(new IdentityRole(AppRoles.VipUser));
+    }
+
+    if (!await roleManager.RoleExistsAsync(AppRoles.User))
+    {
+        await roleManager.CreateAsync(new IdentityRole(AppRoles.User));
+    }
+    
+}
 
 app.MapControllers();
 

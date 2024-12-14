@@ -5,7 +5,6 @@ using ExpenseTrackerApi.Authentication.Models;
 using ExpenseTrackerApi.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using ModelLayer.Models;
 
@@ -84,7 +83,7 @@ namespace ExpenseTrackerApi.Authentication
                 {
                         
                     string? token = GenerateToken(userModel.UserName!);
-                    return Ok(new { token, userModel });
+                    return Ok(new { token  });
 
                 }
             }
