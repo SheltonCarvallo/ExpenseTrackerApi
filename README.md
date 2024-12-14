@@ -25,6 +25,9 @@ The project is organized into three main layers:
 3. **ExpenseTrackerApi**:
    - Main API project containing the business logic, controllers, and services.
    - Authentication, Controllers, and Services are organized into their respective folders.
+     
+## Database diagram
+![ExpenseTrackerDBDiagram](https://github.com/user-attachments/assets/c1e5055f-2b90-4a2f-b576-691b71ce2286)
 
 ## Technologies
 
