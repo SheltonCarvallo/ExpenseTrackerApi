@@ -6,7 +6,7 @@ This personal project is a backend API for tracking personal expenses. It's buil
 
 ## Project URL
 
-You can access the project here: [project page URL](https://github.com/SheltonCarvallo/ExpenseTrackerApi.git)
+You can access the project here: [project URL](https://github.com/SheltonCarvallo/ExpenseTrackerApi.git)
 
 ## Features
 
