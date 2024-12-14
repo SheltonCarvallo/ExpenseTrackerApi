@@ -27,7 +27,7 @@ The project is organized into three main layers:
    - Authentication, Controllers, and Services are organized into their respective folders.
      
 ## Database diagram
-![ExpenseTrackerDBDiagram](https://github.com/user-attachments/assets/c1e5055f-2b90-4a2f-b576-691b71ce2286)
+![ExpenseTrackerDBDiagram](https://github.com/user-attachments/assets/3ebd6dfd-4783-411d-b66d-d488cb7a1b24)
 
 ## Technologies
 
