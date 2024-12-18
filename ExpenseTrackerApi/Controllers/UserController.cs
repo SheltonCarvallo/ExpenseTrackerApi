@@ -1,3 +1,4 @@
+using ExpenseTrackerApi.Authentication.Models;
 using ExpenseTrackerApi.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,8 @@ using ModelLayer.DTOs;
 using ModelLayer.Models;
 
 namespace ExpenseTrackerApi.Controllers;
-[Authorize]
+
+[Authorize (Roles = AppRoles.Admin)]
 [ApiController]
 [Route("api/[Controller]")]
 public class UserController : ControllerBase

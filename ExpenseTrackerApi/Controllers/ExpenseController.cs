@@ -1,6 +1,8 @@
-﻿using ModelLayer.Models;
+﻿using ExpenseTrackerApi.Authentication.Models;
+using ModelLayer.Models;
 using ModelLayer.Models.FakeModels;
 using ExpenseTrackerApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.DTOs;
@@ -8,6 +10,7 @@ using ModelLayer.DTOs;
 namespace ExpenseTrackerApi.Controllers;
 
 
+[Authorize (Roles = AppRoles.User)]
 [ApiController]
 [Route("api/[Controller]")]
 public class ExpenseController : ControllerBase
@@ -30,7 +33,7 @@ public class ExpenseController : ControllerBase
         catch (Exception ex)
         {
 
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+            return ValidationProblem("Unexpected error occurred, contact IT department", ex.Message, 500, "Unexpected error");
         }
     }
 
@@ -47,7 +50,7 @@ public class ExpenseController : ControllerBase
         catch (Exception ex)
         {
 
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+            return ValidationProblem("Unexpected error occurred, contact IT department", ex.Message, 500, "Unexpected error");
         }
     }
 

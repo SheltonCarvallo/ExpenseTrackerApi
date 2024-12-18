@@ -47,7 +47,7 @@ namespace ExpenseTrackerApi.Authentication
             {
                 if (await userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    string? token = await GenerateToken(user ,model.Username!);
+                    string? token = await GenerateToken(user, model.Username);
                     return Ok(new { token });
                 }
             }
@@ -92,7 +92,7 @@ namespace ExpenseTrackerApi.Authentication
             {
                 SavedAuthorization savedAuthorization = await CreateUserInTheBusinessDb(userModel);
                 AppUserModel? createdUser = await userManager.FindByNameAsync(userModel.Username);
-                string? token = await GenerateToken( createdUser!, userModel.Username);
+                string? token = await GenerateToken(createdUser!, userModel.Username);
                 return Ok(new { token, savedAuthorization });
             }
 
@@ -147,9 +147,9 @@ namespace ExpenseTrackerApi.Authentication
             {
                 new(ClaimTypes.Name, userName)
             };
-              
-            claims.AddRange(userRoles.Select(role =>  new Claim(ClaimTypes.Role, role)));
-            
+
+            claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
