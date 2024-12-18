@@ -42,12 +42,12 @@ namespace ExpenseTrackerApi.Authentication
             //Get the secret in the configuration
             //Check if the model is valid
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            AppUserModel? userModel = await userManager.FindByNameAsync(model.Username);
-            if (userModel is not null)
+            AppUserModel? user = await userManager.FindByNameAsync(model.Username);
+            if (user is not null)
             {
-                if (await userManager.CheckPasswordAsync(userModel, model.Password))
+                if (await userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    string? token = GenerateToken(userModel.UserName!);
+                    string? token = await GenerateToken(user ,model.Username!);
                     return Ok(new { token });
                 }
             }
@@ -60,16 +60,15 @@ namespace ExpenseTrackerApi.Authentication
         private async Task<IActionResult> RegisterUserWithRole(RegisterOrUpdateUserModel userModel, string userRole)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
-            //AppUserModel? existedUser = await userManager.FindByNameAsync(userModel.Username); 
-            //TODO try to look for the user just by the Email and not by username
             AppUserModel? existedEmail = await userManager.FindByEmailAsync(userModel.Email);
             AppUserModel? existedUser = await userManager.FindByNameAsync(userModel.Username.Normalize());
-            
+
             if (existedEmail is not null || existedUser is not null)
             {
-               // bool existEmail = existedUser.NormalizedEmail!.Equals(userModel.Email.ToUpper());
                 ModelState.AddModelError("Register error", "Username or Email are already taken");
                 return BadRequest(ModelState);
             }
@@ -92,7 +91,8 @@ namespace ExpenseTrackerApi.Authentication
             if (newUserResult.Succeeded && roleResult.Succeeded)
             {
                 SavedAuthorization savedAuthorization = await CreateUserInTheBusinessDb(userModel);
-                string? token = GenerateToken(userModel.Username);
+                AppUserModel? createdUser = await userManager.FindByNameAsync(userModel.Username);
+                string? token = await GenerateToken( createdUser!, userModel.Username);
                 return Ok(new { token, savedAuthorization });
             }
 
@@ -125,7 +125,7 @@ namespace ExpenseTrackerApi.Authentication
             return savedAuthorization;
         }
 
-        private string? GenerateToken(string username)
+        private async Task<string?> GenerateToken(AppUserModel user, string userName)
         {
             string? secret = configuration["JwtConfig:Secret"];
             string? issuer = configuration["JwtConfig:ValidIssuer"];
@@ -138,12 +138,21 @@ namespace ExpenseTrackerApi.Authentication
 
             SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            // we need to include the roles of the user in the token
+            //We can use the GetRolesAsync() method to get the roles and then add them to the claims
+
+            IList<string> userRoles = await userManager.GetRolesAsync(user);
+            List<Claim> claims = new List<Claim>
+            {
+                new(ClaimTypes.Name, userName)
+            };
+              
+            claims.AddRange(userRoles.Select(role =>  new Claim(ClaimTypes.Role, role)));
+            
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, username),
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(1),
                 Issuer = issuer,
                 Audience = audience,
