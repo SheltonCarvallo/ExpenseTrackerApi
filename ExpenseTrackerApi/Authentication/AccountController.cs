@@ -12,62 +12,28 @@ namespace ExpenseTrackerApi.Authentication
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController(UserManager<AppUserModel> userManager, IConfiguration configuration, IUser userService) : ControllerBase
+    public class AccountController(
+        UserManager<AppUserModel> userManager,
+        IConfiguration configuration,
+        IUser userService) : ControllerBase
     //IConfiguration interface to get the configuration values from the appsettings.json file.
     {
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterOrUpdateUserModel model)
+        [HttpPost("register-user")]
+        public Task<IActionResult> RegisterUser([FromBody] RegisterOrUpdateUserModel userModel)
         {
-            //check if the model is valid
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            AppUserModel? existedUser = await userManager.FindByNameAsync(model.Username);
-            if (existedUser is not null)
-            {
-                ModelState.AddModelError("Username registered", "Username is already taken");
-                return BadRequest(ModelState);
-            }
+            return RegisterUserWithRole(userModel, AppRoles.User);
+        }
 
-            //create a new user object
-            AppUserModel newUser = new AppUserModel
-            {
-                UserName = model.Username,
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-            };
-            
-            //try to save the user
-            IdentityResult result = await userManager.CreateAsync(newUser, model.Password);
+        [HttpPost("register-admin")]
+        public Task<IActionResult> RegisterAdmin([FromBody] RegisterOrUpdateUserModel userModel)
+        {
+            return RegisterUserWithRole(userModel, AppRoles.Admin);
+        }
 
-            //If the user is successfully created return Ok
-
-            if (result.Succeeded)
-            {
-                string? token = GenerateToken(model.Username);
-                //Here I came up with to call the service which store the user in the business database (Me)
-                User userDbExpenseTracker = new User
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Username = model.Username,
-                    Email = model.Email,
-                    StatusId = 1
-                };
-                SavedAuthorization savedAuthorization = await userService.PostUser(userDbExpenseTracker);
-                return Ok(new { token, savedAuthorization });
-            }
-
-            // If there are any errors, add them to the ModelState object
-            // and return the error to the client
-            foreach (IdentityError error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-
-            // If we got this far, something failed, redisplay form
-            return BadRequest(ModelState);
+        [HttpPost("register-vip-user")]
+        public Task<IActionResult> RegisterVipUser([FromBody] RegisterOrUpdateUserModel userModel)
+        {
+            return RegisterUserWithRole(userModel, AppRoles.VipUser);
         }
 
         [HttpPost("login")]
@@ -76,22 +42,88 @@ namespace ExpenseTrackerApi.Authentication
             //Get the secret in the configuration
             //Check if the model is valid
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            AppUserModel? userModel =  await userManager.FindByNameAsync(model.Username);
+            AppUserModel? userModel = await userManager.FindByNameAsync(model.Username);
             if (userModel is not null)
             {
                 if (await userManager.CheckPasswordAsync(userModel, model.Password))
                 {
-                        
                     string? token = GenerateToken(userModel.UserName!);
-                    return Ok(new { token  });
-
+                    return Ok(new { token });
                 }
             }
+
             //If the user is not found display an error message
-            ModelState.AddModelError("Problem", "Invalid username or password" );
+            ModelState.AddModelError("Problem", "Invalid username or password");
             return BadRequest(ModelState);
         }
-        
+
+        private async Task<IActionResult> RegisterUserWithRole(RegisterOrUpdateUserModel userModel, string userRole)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            //AppUserModel? existedUser = await userManager.FindByNameAsync(userModel.Username); 
+            //TODO try to look for the user just by the Email and not by username
+            AppUserModel? existedEmail = await userManager.FindByEmailAsync(userModel.Email);
+            AppUserModel? existedUser = await userManager.FindByNameAsync(userModel.Username.Normalize());
+            
+            if (existedEmail is not null || existedUser is not null)
+            {
+               // bool existEmail = existedUser.NormalizedEmail!.Equals(userModel.Email.ToUpper());
+                ModelState.AddModelError("Register error", "Username or Email are already taken");
+                return BadRequest(ModelState);
+            }
+
+            // Create a new user object
+            AppUserModel newUser = new AppUserModel()
+            {
+                UserName = userModel.Username,
+                Email = userModel.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+            };
+
+            // Try to save the user
+            IdentityResult newUserResult = await userManager.CreateAsync(newUser, userModel.Password);
+
+            // Add user role
+            IdentityResult roleResult = await userManager.AddToRoleAsync(newUser, userRole);
+
+            // If the user is successfully created
+            if (newUserResult.Succeeded && roleResult.Succeeded)
+            {
+                SavedAuthorization savedAuthorization = await CreateUserInTheBusinessDb(userModel);
+                string? token = GenerateToken(userModel.Username);
+                return Ok(new { token, savedAuthorization });
+            }
+
+            // If there are any errors, add them to the ModelState object
+            // and return the error to the client
+            foreach (IdentityError error in newUserResult.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            foreach (IdentityError error in roleResult.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        private async Task<SavedAuthorization> CreateUserInTheBusinessDb(RegisterOrUpdateUserModel userModel)
+        {
+            User userDbExpenseTracker = new User
+            {
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                Username = userModel.Username,
+                Email = userModel.Email,
+                StatusId = 1
+            };
+            SavedAuthorization savedAuthorization = await userService.PostUser(userDbExpenseTracker);
+            return savedAuthorization;
+        }
 
         private string? GenerateToken(string username)
         {
