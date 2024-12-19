@@ -67,7 +67,7 @@ public class ExpenseController : ControllerBase
         catch (Exception ex)
         {
 
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+            return ValidationProblem("Unexpected error occurred, contact IT department", ex.Message, 500, "Unexpected error");
         }
     }
 
@@ -116,7 +116,7 @@ public class ExpenseController : ControllerBase
         }
         catch (Exception ex)
         {
-            return ValidationProblem("Unexpected error ocurred, contact IT deparment", ex.Message, 500, "Unexpected error");
+            return ValidationProblem("Unexpected error occurred, contact IT department", ex.Message, 500, "Unexpected error");
         }
     }
 
